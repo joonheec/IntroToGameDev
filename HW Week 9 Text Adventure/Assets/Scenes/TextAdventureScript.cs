@@ -29,7 +29,7 @@ public class TextAdventureScript : MonoBehaviour {
 		room_west = "";
 		switch (currentRoom) {
 		case "Office Entrance":
-			textBuffer = "You have entered the office building. Find and kill your annoying boss!\n"+
+			textBuffer = "You have entered the office building.\n"+ "Find and kill your annoying boss!\n"+
 				"Find the key to the Storage Room\n"+"The Main Room is to the north";
 			room_north = "Storage Room";
 
@@ -40,5 +40,6 @@ public class TextAdventureScript : MonoBehaviour {
 
 
 		}
+		GetComponent<TextMesh> ().text = textBuffer;
 	}
 }
