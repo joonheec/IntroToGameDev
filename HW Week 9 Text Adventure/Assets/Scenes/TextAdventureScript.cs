@@ -20,6 +20,9 @@ public class TextAdventureScript : MonoBehaviour {
 
 
 	private bool hasJanKeyCard = false;
+	private bool employeesExist = false;
+	private bool roomEntered = false;
+	private bool hasGun = false;
 	private bool won = false;
 
 
@@ -51,37 +54,102 @@ public class TextAdventureScript : MonoBehaviour {
 
 			break;
 		case "Stairwell":
-			textBuffer = "You're in the stairwell. Press 'Enter' to go to the next floor.";
+			textBuffer = "You're in the stairwell.\n Press 'Enter' to go to the next floor.";
 				if (Input.GetKeyDown(KeyCode.KeypadEnter)){
 				currentRoom = "Second Floor";
 
 			}
 			break;
 		case "Second Floor":
-			textBuffer = "You're on the second floor. There is a connector room to your north.";
+			textBuffer = "You're on the second floor.\n There is a connector room to your north.";
 			room_north = "Connector";
+			room_south = "Stairwell";
 			break;
 		case "Connector":
 			textBuffer = "You're in the connector room.";
 			room_east = "Janitorial Storage Room";
 			room_west = "Security Guards' Locker Room";
 			room_north = "First Office Room";
+			room_south = "Second Floor";
 			break;
 		case "Janitorial Storage Room":
 			textBuffer = "You're in the janitor's storage room.\n"+
 				"You found the Janitorial Key Card.\n"+"Press 'M' to pick it up.";
+			room_east = "Connector";
 			if (Input.GetKeyDown(KeyCode.M)){
 				if(!hasJanKeyCard){
-				hasJanKeyCard = true;
+					sfx.clip = sfx_janKeyCard;
+					sfx.Play();
+					hasJanKeyCard = true;
+					textBuffer = "You got the Janitorial Key Card. Press any key to go back to the connector.";
+					if(Input.anyKeyDown){
+						currentRoom = "Connector";
+					}
+				else{
+						textBuffer = "You already have the Janitorial Key Card. Press any key...";
+						if(Input.anyKeyDown){
+							currentRoom = "Connector";
+						}
+					}
+				}
+			}
+			break;
+
+		case "Security Guards' Locker Room":
+			room_west = "Connector";
+			if (!hasJanKeyCard){
+				textBuffer = "You do not have access to this room. Press any key...";
+				if(Input.anyKeyDown){
+					currentRoom = "Connector";
+				}
+				else if (hasJanKeyCard){
+					textBuffer = "You are in the locker room.\n ";
+					if(!hasGun){
+						textBuffer += "A guard left a gun behind. Press 'M' to pick it up";
+						if (Input.GetKeyDown(KeyCode.M)){
+							sfx.clip = sfx_hasGun;
+							sfx.Play();
+							hasGun = true;
+							textBuffer = "You picked up the gun. Press any key to leave the locker room.";
+						}
+					}
+					else {
+						textBuffer += "But you already have the gun. Press any key...";
+						currentRoom = "Connector";
+					}
 
 				}
 			}
 			break;
+		case "First Office Room":
+			textBuffer = "You are in the First Office Room.\n";
+			room_east = "Second Office Room";
+			if (hasGun){
+				if (!roomEntered){
+					
+					float randomizer;
+					randomizer = Random.Range(0,1.0f);
+					Debug.Log (randomizer);
+
+					if (randomizer > 0.5f){
+						employeesExist = true;
+					}
+					if(employeesExist){
+						textBuffer = "You're employees are still at the office. 
+				}
+			}
+			break;
+		case "Second Office Room":
+			textBuffer = "
+		
+
 		default:
 			break;
 
 
 		}
+
+
 
 		if (room_south != "")
 		{
