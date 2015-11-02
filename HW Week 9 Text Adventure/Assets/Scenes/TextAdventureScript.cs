@@ -14,13 +14,15 @@ public class TextAdventureScript : MonoBehaviour {
 
 
 	public AudioSource bgm;
+	public AudioClip bgm_victory;
 	public AudioSource sfx;
 	public AudioClip sfx_janKeyCard;
 	public AudioClip sfx_hasGun;
+	public AudioClip sfx_win;
+
 
 
 	private bool hasJanKeyCard = false;
-	private bool employeesExist = false;
 	private bool roomEntered = false;
 	private bool hasGun = false;
 	private bool won = false;
@@ -47,8 +49,7 @@ public class TextAdventureScript : MonoBehaviour {
 		room_west = "";
 		switch (currentRoom) {
 		case "Office Entrance":
-			textBuffer = "You have entered the office building.\n" + "Find and kill your annoying boss!\n"
-				+ "The Stairwell is to the north";
+			textBuffer = "Office Massacre\n"+"Joon Hee Choi";
 			room_north = "Stairwell";
 
 
@@ -70,79 +71,133 @@ public class TextAdventureScript : MonoBehaviour {
 			room_east = "Janitorial Storage Room";
 			room_west = "Security Guards' Locker Room";
 			room_north = "First Office Room";
-			room_south = "Second Floor";
+
 			break;
 		case "Janitorial Storage Room":
 			textBuffer = "You're in the janitor's storage room.\n"+
 				"You found the Janitorial Key Card.\n"+"Press 'M' to pick it up.";
 			room_east = "Connector";
 			if (Input.GetKeyDown(KeyCode.M)){
-				if(!hasJanKeyCard){
-					sfx.clip = sfx_janKeyCard;
-					sfx.Play();
-					hasJanKeyCard = true;
-					textBuffer = "You got the Janitorial Key Card. Press any key to go back to the connector.";
-					if(Input.anyKeyDown){
-						currentRoom = "Connector";
-					}
-				else{
-						textBuffer = "You already have the Janitorial Key Card. Press any key...";
-						if(Input.anyKeyDown){
-							currentRoom = "Connector";
-						}
-					}
+				currentRoom = "Got Key";
 				}
-			}
 			break;
+		case "Got Key":
+				textBuffer = "You got the Janitorial Key Card. \n";
+			if(!hasJanKeyCard){
+				sfx.PlayOneShot(sfx_janKeyCard);
+				hasJanKeyCard = true;
+			}
+				room_east = "Connector";
+				
 
+			break;
 		case "Security Guards' Locker Room":
 			room_west = "Connector";
 			if (!hasJanKeyCard){
-				textBuffer = "You do not have access to this room. Press any key...";
+				textBuffer = "You do not have access to this room. ";
 				if(Input.anyKeyDown){
 					currentRoom = "Connector";
 				}
+			}
 				else if (hasJanKeyCard){
 					textBuffer = "You are in the locker room.\n ";
 					if(!hasGun){
-						textBuffer += "A guard left a gun behind. Press 'M' to pick it up";
+						textBuffer += "A guard left a gun behind. \nPress 'M' to pick it up";
 						if (Input.GetKeyDown(KeyCode.M)){
-							sfx.clip = sfx_hasGun;
-							sfx.Play();
-							hasGun = true;
-							textBuffer = "You picked up the gun. Press any key to leave the locker room.";
+							currentRoom = "Gun Room";
+						
 						}
 					}
-					else {
-						textBuffer += "But you already have the gun. Press any key...";
-						currentRoom = "Connector";
-					}
-
 				}
+			break;
+		case "Gun Room":
+			textBuffer = "You picked up the gun. \nPress any key to leave the \nlocker room.";
+			hasGun = true;
+			sfx.PlayOneShot(sfx_hasGun);
+			if(Input.anyKeyDown){
+				currentRoom = "Connector";
 			}
 			break;
 		case "First Office Room":
 			textBuffer = "You are in the First Office Room.\n";
+			room_south = "Connector";
 			room_east = "Second Office Room";
 			if (hasGun){
 				if (!roomEntered){
-					
-					float randomizer;
-					randomizer = Random.Range(0,1.0f);
-					Debug.Log (randomizer);
-
-					if (randomizer > 0.5f){
-						employeesExist = true;
+					textBuffer += "\nYou're employees are still at \nthe office.\n"
+						+"You don't want any witnesses...\n"+ "Press 'M' to kill them.";
+					roomEntered = true;
+					if(Input.GetKeyDown(KeyCode.M)){
+						currentRoom = "Second Office Room";
 					}
-					if(employeesExist){
-						textBuffer = "You're employees are still at the office. 
 				}
 			}
 			break;
 		case "Second Office Room":
-			textBuffer = "
-		
+			textBuffer = "You are in the Second Office Room";
+			room_west = "First Office Room";
+			room_east = "Executive Office";
+			if (hasGun){
+				if (!roomEntered){
+						textBuffer += "You're employees are still at the office.\n"
+							+"You don't want any witnesses...\n"+ "Press 'M' to kill them.";
+					roomEntered = true;
+						if(Input.GetKeyDown(KeyCode.M)){
+							currentRoom = "Executive Office";
+						}
+					}
+				}
+			break;
+		case "Executive Office":
+			textBuffer = "You are in the Executive Office.\n"+"All the Executives have left.";
+			room_north = "Secretary";
+			room_west = "Second Office Room";
+			break;
+		case "Secretary":
+			textBuffer = "You don't have an appointment with the CEO.\n";
+			room_south = "Executive Office";
+			room_west = "CEO Office";
+			if(hasGun){
+				textBuffer+="Press 'M' to kill the secretary";
+				if(Input.GetKeyDown(KeyCode.M)){
+					currentRoom = "CEO Office";
+				}
+			}
+			room_south = "Executive Office";
+			room_west = "CEO Office";
 
+			break;
+		case "CEO Office":
+			if(!hasGun){
+				textBuffer = "You do not have a gun. Press any key... ";
+				if(Input.anyKeyDown){
+					currentRoom = "Secretary";
+				}
+			}
+			else if(hasGun){
+				currentRoom = "Kill CEO";
+			}
+			   break;
+		case "Kill CEO":
+			textBuffer = "You found the CEO. Kill this man.\n"+
+				"Press 'M' to kill your boss";
+			if(Input.GetKeyDown(KeyCode.M)){
+				currentRoom = "Dead CEO";
+
+			}
+			break;
+		case "Dead CEO":
+			textBuffer = "You killed the CEO and ended up in jail!\n"+
+				"Congrats!!";
+			if (!won){
+			won = true;
+			sfx.PlayOneShot(sfx_win);
+			}
+			bgm.clip = bgm_victory;
+			if(!bgm.isPlaying){
+				bgm.Play ();
+			}
+			break;
 		default:
 			break;
 

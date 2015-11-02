@@ -1,10 +1,17 @@
 fileFormatVersion: 2
 guid: 03d75467960824f5d874c55088f874f8
-timeCreated: 1446065394
+timeCreated: 1446495522
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - myCamera: {instanceID: 0}
+  - bgm: {instanceID: 0}
+  - bgm_victory: {fileID: 8300000, guid: 98bc84bdef5a549119111deacfb10c76, type: 3}
+  - sfx: {instanceID: 0}
+  - sfx_janKeyCard: {fileID: 8300000, guid: c82cafaf65a834d03a5aed36769fa615, type: 3}
+  - sfx_hasGun: {fileID: 8300000, guid: eb18387a7e5ad43ce966d456b4102432, type: 3}
+  - sfx_win: {fileID: 8300000, guid: b37b5f18961134b0ab8d6062e2336595, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
