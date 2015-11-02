@@ -18,6 +18,7 @@ public class ClickToMove : MonoBehaviour {
 
 			// get location of click
 			//transform.position = Input.mousePosition;
+			// create a tag for the plane, so that the ray is restricted to being hit on the PLANE
 			if(Physics.Raycast(ray, out hit) && hit.collider.tag == "Ground") {
 				Vector3 move;
 				//get directions to destination
