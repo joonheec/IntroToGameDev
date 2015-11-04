@@ -19,7 +19,7 @@ public class MouseLook : MonoBehaviour {
 		}
 		if (Input.GetAxis ("Mouse Y") > 1) {
 			//rotate player in direction of mouse
-			transform.Rotate (transform.right, Input.GetAxis ("Mouse Y") * ySensitivity);
+			transform.Rotate (transform.right, -Input.GetAxis ("Mouse Y") * ySensitivity);
 		}
 	}
 }

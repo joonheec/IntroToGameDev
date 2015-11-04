@@ -84,6 +84,7 @@ public class TextAdventureScript : MonoBehaviour {
 		case "Got Key":
 				textBuffer = "You got the Janitorial Key Card. \n";
 			if(!hasJanKeyCard){
+				sfx.clip = sfx_janKeyCard;
 				sfx.PlayOneShot(sfx_janKeyCard);
 				hasJanKeyCard = true;
 			}
@@ -112,8 +113,11 @@ public class TextAdventureScript : MonoBehaviour {
 			break;
 		case "Gun Room":
 			textBuffer = "You picked up the gun. \nPress any key to leave the \nlocker room.";
+			if (!hasGun){
 			hasGun = true;
-			sfx.PlayOneShot(sfx_hasGun);
+				sfx.clip = sfx_hasGun;
+				sfx.PlayOneShot(sfx_hasGun);
+			}
 			if(Input.anyKeyDown){
 				currentRoom = "Connector";
 			}
@@ -191,6 +195,7 @@ public class TextAdventureScript : MonoBehaviour {
 				"Congrats!!";
 			if (!won){
 			won = true;
+				sfx.clip = sfx_win;
 			sfx.PlayOneShot(sfx_win);
 			}
 			bgm.clip = bgm_victory;
